@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header">Cambiar de balanza</h4>
+        <div class="card-body">
+            <form  #formContacto="ngForm">
+
+                <div class="form-group">
+                    <label for="password">Balanza</label>
+                    <select [(ngModel)]="balanza" name="balanza" ng-change="selbalanza()" class="form-control">
+                      <option *ngFor="let objbalanza of balanzas" [ngValue]="objbalanza">{{objbalanza.Id}} - {{objbalanza.NombreBalanza}}</option>
+                    </select>
+
+                </div>
+                <button [disabled]="loading" (click)="enviar()" class="btn btn-primary">
+                    <span  *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Cambiar
+                </button>
+
+            </form>
+        </div>
+    </div>
+  </div>
+
+</div>

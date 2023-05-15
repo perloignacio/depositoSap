@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-table .mat-row{cursor: pointer;}
+.mat-table .mat-row .mat-cell{padding: 0px 5px;}
+.mat-table .mat-row .mat-cell:first-of-type{padding-left: 24px;}
+
+.center-object {  margin: auto;}
+
+@media print {
+  .app-sidebar{display: none;}
+  .app-header .app-header__content{display: none;}
+  .app-sidebar .scrollbar-sidebar{display: none;}
+
+}

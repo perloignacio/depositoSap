@@ -1,0 +1,16 @@
+.mat-column-Faltante {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 15% !important;
+  width: 15% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+.mat-cell.cdk-cell{font-size: 13px !important;}
+.visor{padding: 10px 20px;background-color: #000;text-align: center;}
+.visor h3{font-size: 50px;font-weight: 700;letter-spacing: 2px;}

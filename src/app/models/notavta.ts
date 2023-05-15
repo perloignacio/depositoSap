@@ -1,0 +1,33 @@
+export class notavta{
+  fecha_pedido:Date;
+  viaje:string;
+  numero: string;
+  tipo: string;
+  ruteo: string;
+  org_vtas: string;
+  clase: string;
+  descrip_clase: string;
+  solicitante: string;
+  nombre_solic:string;
+  destinatario:string;
+  nombre_dest:string;
+  valor_neto: number;
+  peso: number;
+  zona_vtas:string;
+  descrip_zona:string;
+  calle:string;
+  cod_pos:string;
+  poblacion:string;
+  region:string;
+  cond_exp:string;
+  descrip_cond:string;
+  prioridad:string;
+  vendedor:string;
+  nombre_vend:string;
+  creador:string;
+  medio_carga:string;
+  listas:number;
+  pendientes:number;
+  empresa:string="SERIN";
+  observ:string;
+}

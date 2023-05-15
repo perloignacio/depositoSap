@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header">Cambiar de nave</h4>
+        <div class="card-body">
+            <form  #formContacto="ngForm">
+
+                <div class="form-group">
+                    <label for="password">Nave</label>
+                    <select [(ngModel)]="nave" name="nave" ng-change="selnave()" class="form-control">
+                      <option *ngFor="let objnave of naves" [ngValue]="objnave">{{objnave.codigo}} - {{objnave.descripcion}}</option>
+                    </select>
+
+                </div>
+                <button [disabled]="loading" (click)="enviar()" class="btn btn-primary">
+                    <span  *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Cambiar
+                </button>
+
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
