@@ -8,5 +8,5 @@ export class Preparacion{
     material :string;
     motivo :string;
     pos :number;
-
+    cantControl:number;
 }

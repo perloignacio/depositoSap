@@ -113,73 +113,83 @@ export class DetalleNotaVentaComponent implements OnInit {
     errors=false;
     let preparaciones:Preparacion[]=[];
     this.notas.forEach(nvd => {
-
-      if(nvd.cantprep>nvd.getEquivalenciaUnSel()){
-        if(nvd.cantprepum.toLowerCase().includes("un")){
-          msj="No puede cargar mas items que los pedidos";
-          errors=true;
-        }
-      }
-      if (nvd.cantprep!=0){
-        if(nvd.getEquivalenciaUnSel()>nvd.cantprep){
-          if(nvd.motivo.toString().trim()=='0'){
-            msj="Indique el motivo del faltante";
+      if(!nvd.disabled && (nvd.cantprep!=0 || nvd.motivo!='')){
+        
+        if(nvd.cantprep>nvd.getEquivalenciaUnSel().cant){
+          if(nvd.cantprepum.toLowerCase().includes("un")){
+            msj="No puede cargar mas items que los pedidos";
             errors=true;
           }
         }
-      }
+        if (nvd.cantprep!=0){
+          if(nvd.getEquivalenciaUnSel().cant>nvd.cantprep){
+           
+            if(nvd.motivo?.toString().trim()=='0' || nvd.motivo==""){
+             
+              msj="Indique el motivo del faltante";
+              errors=true;
+            }
+          }
+        }
 
-      if (nvd.cantprep!=0){
-        if(!nvd.cantControl){
-          msj="La cantidad control no puede ir vacia";
-          errors=true;
-        }else{
-          if (nvd.cantControl==0){
+        if (nvd.cantprep!=0){
+          if(!nvd.cantControl){
             msj="La cantidad control no puede ir vacia";
             errors=true;
+          }else{
+            if (nvd.cantControl==0){
+              msj="La cantidad control no puede ir vacia";
+              errors=true;
+            }
           }
         }
-      }
 
       // chequear si esta preparando y existencia es igual o menor 0
-      if(!errors){
+          if(!errors){
 
-       
+          
 
-        if(nvd.cantprep>0 && nvd.existencia<=0){
-          msj="En el sistema parece que no hay existencia del producto. Esta seguro que es el producto correcto? en caso afirmativo por favor notifique a su superior del error en el control de existencias.";
-          EnviaMails=true;
-          existencia=true;
-          ok=false;
+            if(nvd.cantprep>0 && nvd.existencia<=0){
+              msj="En el sistema parece que no hay existencia del producto. Esta seguro que es el producto correcto? en caso afirmativo por favor notifique a su superior del error en el control de existencias.";
+              EnviaMails=true;
+              existencia=true;
+              ok=false;
+            }
+            if(nvd.cantprep>nvd.existencia){
+              msj="Esta preparando mas mercaderia que la indicada en existencia. Esta seguro que es el producto correcto? en caso afirmativo por favor notifique a su superior del error en el control de existencias.";
+              EnviaMails=true;
+              existencia=true;
+              ok=false;
+            }
+            if(nvd.motivo!=""){
+              if(nvd.motivo.toString().trim()!='0' && nvd.existencia>0){
+                msj="En el sistema parece que hay existencia del producto que ud marco como faltante, desea continuar?";
+                existencia=true;
+                ok=false;
+              }
+            }
+            
+          }
+        
+        const prepa=new Preparacion();
+        prepa.cantprep=nvd.cantprep;
+        prepa.cantprepum=nvd.cantprepum;
+        prepa.material=nvd.material;
+        prepa.motivo=nvd.motivo;
+        prepa.numeroNota=nvd.numero;
+        if(nvd.cantprepum.toLowerCase()=="un"){
+          prepa.peso_real=nvd.cantControl;
+        }else{
+          prepa.peso_real=nvd.cantprep;
         }
-        if(nvd.cantprep>nvd.existencia){
-          msj="Esta preparando mas mercaderia que la indicada en existencia. Esta seguro que es el producto correcto? en caso afirmativo por favor notifique a su superior del error en el control de existencias.";
-          EnviaMails=true;
-          existencia=true;
-          ok=false;
-        }
-        if(nvd.material.toString().trim()!='0' && nvd.existencia>0){
-          msj="En el sistema parece que hay existencia del producto que ud marco como faltante, desea continuar?";
-          existencia=true;
-          ok=false;
-        }
+        prepa.pos=nvd.pos;
+        prepa.viaje=nvd.viaje;
+        prepa.descripcion=this.objViajes.descripcion;
+        prepa.cantControl=nvd.cantControl;
+        
+          preparaciones.push(prepa)
       }
       
-      const prepa=new Preparacion();
-      prepa.cantprep=nvd.cantprep;
-      prepa.cantprepum=nvd.cantprepum;
-      prepa.material=nvd.material;
-      prepa.motivo=nvd.motivo;
-      prepa.numeroNota=nvd.numero;
-      if(nvd.cantprepum.toLowerCase()=="un"){
-        prepa.peso_real=nvd.cantControl;
-      }else{
-        prepa.peso_real=nvd.cantprep;
-      }
-      prepa.pos=nvd.pos;
-      prepa.viaje=nvd.viaje;
-      prepa.descripcion=this.objViajes.descripcion;
-      preparaciones.push(prepa)
       
     });
 

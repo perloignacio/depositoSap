@@ -40,6 +40,6 @@ export class Viajes {
   Km_Inicial: number;
   Km_Final: number;
   prioridad: string;
-
+  tviaje:string
 
 }

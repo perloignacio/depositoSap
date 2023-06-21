@@ -11,7 +11,7 @@
         <div class="card-body pt-1">
           <div class="row">
             <div class="col-md-12 col-xs-12">
-              <p class="font-weight-bold">{{this.objViajes.fecha | date: "dd-MM-yyyy"}} - {{this.objViajes.numero}}</p>
+              <p class="font-weight-bold">{{this.objViajes.fecha | date: "dd-MM-yyyy"}} - {{this.objViajes.numero}} {{objViajes.tviaje}}</p>
               <p class=""><span class="font-weight-bold text-danger">Observaciones:</span> <span class="text-danger">{{ this.objViajes.Obsprepa}}</span></p>
 
             </div>
@@ -98,7 +98,7 @@
           <ng-container matColumnDef="Umedida">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> U.Medida </th>
             <td mat-cell *matCellDef="let row">
-              <select [(ngModel)]="row.cantprepum" [(disabled)]="row.disabled"   name="uventasel" (change)="row.setEquivalencias()" style="width: 100px;" class="form-control">
+              <select [(ngModel)]="row.cantprepum" [(disabled)]="row.disabled"   name="uventasel" (change)="row.setEquivalencias();row.setCantCtrol()" style="width: 100px;" class="form-control">
                 <option *ngFor="let objunidad of row.materialObj.uventasDisponibles" [ngValue]="objunidad">{{objunidad}}</option>
               </select>
             </td>
@@ -109,7 +109,7 @@
            <ng-container matColumnDef="Pendiente">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Pendiente </th>
             <td mat-cell *matCellDef="let row"> <span class="font-weight-bold">
-              {{row.getEquivalenciaUnSel().um}} {{row.getEquivalenciaUnSel().cant-row.cantprep | number:'1.1-3'  }} -  </span></td>
+              {{row.getEquivalenciaUnSel().cant-row.cantprep | number:'1.1-3'  }} -  </span></td>
           </ng-container>
 
           <!-- Name Column -->
@@ -117,15 +117,16 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
             <td mat-cell *matCellDef="let row">
               <!--[(disabled)]="row.eskg"-->
-              <input type="number" [(disabled)]="row.disabled" (keypress)="row.setCantCtrol()" [(ngModel)]="row.cantprep"  name="cantidad"  class="form-control" style="width: 120px;"  />
+              <input type="number" [(disabled)]="row.disabled" (keyup)="row.setCantCtrol()" [(ngModel)]="row.cantprep"  name="cantidad"  class="form-control" style="width: 120px;"  />
             </td>
           </ng-container>
 
 
           <ng-container matColumnDef="CantidadCtrl">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Ctrl Prepa </th>
-            <td mat-cell *matCellDef="let row">
-              <input type="number" [(disabled)]="row.disabled" [(ngModel)]="row.cantControl"  name="cantcontrol"  class="form-control" style="width: 120px;"  />
+            <td mat-cell *matCellDef="let row" style="width: 120px;">
+              <small class="d-inline-block">{{row.uventacantControl}} </small>
+               <input type="number" [(disabled)]="row.disabled" [(ngModel)]="row.cantControl"  name="cantcontrol"  class="form-control d-inline-block" style="width: 80% !important;font-size: 12px;"   />
                </td>
           </ng-container>
 

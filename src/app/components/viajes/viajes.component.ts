@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Naves } from '@app/models/naves';
 
 import { Viajes } from '@app/models/viajes';
 import { ViajesService } from '@app/services/viajes.service';
@@ -26,14 +27,21 @@ export class ViajesComponent implements AfterViewInit   {
 
 
 
-
+  nave:Naves;
   constructor(private viajesService: ViajesService,private router: Router) {
-    var retrievedObject = localStorage.getItem('balanza');
+    let retrievedObject = localStorage.getItem('balanza');
     if(!retrievedObject){
       router.navigate(['/balanza']);
     }
+    
+     
+    retrievedObject = localStorage.getItem('nave');
+    if(!retrievedObject){
+      router.navigate(['/naves']);
+    }
+    this.nave=JSON.parse(retrievedObject);
 
-    this.viajesService.getAll().pipe(first()).subscribe(viajes => {
+    this.viajesService.getAll(this.nave.codigo).pipe(first()).subscribe(viajes => {
 
       this.dataSource = new MatTableDataSource(viajes);
       this.dataSource.paginator = this.paginator;

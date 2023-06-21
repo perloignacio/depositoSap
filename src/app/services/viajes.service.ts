@@ -12,8 +12,8 @@ export class ViajesService {
     this.endpoint = environment.apiUrl+"documentos";
   }
 
-  getAll() {
-    return this.http.get<Viajes[]>(`${environment.apiUrl}viajes/todos`);
+  getAll(nave:string) {
+    return this.http.get<Viajes[]>(`${environment.apiUrl}viajes/todos?nave=${nave}`);
   }
 
 }
