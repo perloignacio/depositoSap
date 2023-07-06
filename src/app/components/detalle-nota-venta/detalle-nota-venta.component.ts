@@ -216,6 +216,9 @@ export class DetalleNotaVentaComponent implements OnInit {
                 alert("Se guardo correctamente");
                 this.inicio()
               }
+            },(err)=>{
+              Swal.fire("Upps",err.error.Message,'warning');
+              this.inicio()
             });
 
           }
@@ -232,6 +235,9 @@ export class DetalleNotaVentaComponent implements OnInit {
               alert("Se guardo correctamente");
               this.inicio()
             }
+          },(err)=>{
+            Swal.fire("Upps",err.error.Message,'warning');
+            this.inicio()
           });
           //console.log(_prod);
         }else{
@@ -282,7 +288,7 @@ export class DetalleNotaVentaComponent implements OnInit {
       prepa.numeroNota=nvd.numero;
       prepa.pos=nvd.pos;
       prepa.viaje=nvd.viaje;
-      
+      prepa.reparto=nvd.reparto;
       this.svcNotas.limpiar(prepa).pipe(first()).subscribe(lbl => {
         if(lbl=='Error'){
           alert("Error al anular el item");

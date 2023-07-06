@@ -15,5 +15,8 @@ export class ViajesService {
   getAll(nave:string) {
     return this.http.get<Viajes[]>(`${environment.apiUrl}viajes/todos?nave=${nave}`);
   }
+  pasar(nro:string,viaje:string) {
+    return this.http.get<string>(`${environment.apiUrl}notasventas/pasar?viaje=${nro}&descripcion=${viaje}`);
+  }
 
 }

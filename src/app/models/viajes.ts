@@ -16,7 +16,7 @@ export class Viajes {
   prepag: string;
   prepav: string;
   hojaderuta: number;
-  observa: string;
+  obs: string;
   tarifa: number;
   destinos: number;
   usuario: string;

@@ -10,6 +10,7 @@ import { Naves } from '@app/models/naves';
 import { Viajes } from '@app/models/viajes';
 import { ViajesService } from '@app/services/viajes.service';
 import { first } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-viajes',
@@ -18,7 +19,7 @@ import { first } from 'rxjs/operators';
 })
 export class ViajesComponent implements AfterViewInit   {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'prioridad', 'kilos'];
+  displayedColumns: string[] = ['fecha', 'numero', 'prioridad', 'kilos','Pasar'];
   dataSource: MatTableDataSource<Viajes>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -55,6 +56,28 @@ export class ViajesComponent implements AfterViewInit   {
     localStorage.setItem('viaje', JSON.stringify(row));
     this.router.navigate(['/notasventa']);
   }
+
+  pasar(row:Viajes){
+    this.viajesService.pasar(row.numero,row.descripcion).subscribe((res)=>{
+      
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'El presupuesto se cargo correctamente',
+          showConfirmButton: false,
+          timer: 2500
+        })
+        //this.srvShared.Carrito=new Carrito();
+        //this.router.navigate(["panel/gracias"]);
+      
+    },(err)=>{
+      console.log(err);
+      Swal.fire("Upps",err.error.Message,'warning');
+    })
+
+    
+  }
+
 
   ngAfterViewInit() {
 

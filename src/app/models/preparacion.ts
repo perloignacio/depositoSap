@@ -9,4 +9,5 @@ export class Preparacion{
     motivo :string;
     pos :number;
     cantControl:number;
+    reparto:number;
 }

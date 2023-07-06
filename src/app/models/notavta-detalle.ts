@@ -32,6 +32,7 @@ export class NotaVentaDetalle
   existencia:number=0;
   disabled:boolean=false;
   imprimir:boolean=false;
+  estado:string;
   constructor(obj?: any) {
 
     Object.assign(this, obj);
@@ -46,7 +47,7 @@ export class NotaVentaDetalle
     })
     this.setEquivalencias(true);
     this.setUmedidaCtrol();
-    if(this.cantprep || this.motivo!=""){
+    if(this.estado=="P"){
       this.disabled=true;
     }else{
       this.setCantCtrol();
