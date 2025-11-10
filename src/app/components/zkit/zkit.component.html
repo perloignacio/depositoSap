@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="col-md-6 offset-md-3 mt-5">
+        <div class="card">
+            <h4 class="card-header">Seleccione una familia</h4>
+            <div class="card-body">
+                <form #formContacto="ngForm">
+                    <div class="form-group">
+                        <label for="password">Zkit</label>
+                        <select [(ngModel)]="selectedZkit" name="zkit" ng-change="selzkit()" class="form-control">
+                            <option *ngFor="let objzkit of zkitItems" [ngValue]="objzkit">{{objzkit}}</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" [disabled]="loading" (click)="enviar()" class="btn btn-primary">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Seleccionar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

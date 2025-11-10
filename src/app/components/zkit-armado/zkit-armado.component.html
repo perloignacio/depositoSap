@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8">
+                <mat-form-field>
+                    <mat-label>Filtro</mat-label>
+                    <input matInput (keyup)="applyFilter($event)"  #input>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end align-items-center">
+                <button type="button" class="btn btn-primary" (click)="armarKit()" [disabled]="productosSeleccionados.length === 0">
+                    Armar Kit ({{productosSeleccionados.length}})
+                </button>
+            </div>
+        </div>
+    </div>
+       
+    <div class="col-md-12">
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Código Column -->
+          <ng-container matColumnDef="codigo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+            <td mat-cell *matCellDef="let row"> {{row.codigo}} </td>
+          </ng-container>
+
+          <!-- Descripción Column -->
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+            <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+          </ng-container>
+
+          <!-- Kg Column -->
+          <ng-container matColumnDef="kg">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Peso </th>
+            <td mat-cell *matCellDef="let row"> {{row.kg}} <b>KG</b> </td>
+          </ng-container>
+
+          <!-- Medida Column -->
+          <ng-container matColumnDef="medida">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Medida </th>
+            <td mat-cell *matCellDef="let row"> {{row.medida}} </td>
+          </ng-container>
+
+          <!-- Tipo Column -->
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+            <td mat-cell *matCellDef="let row"> {{row.tipo}} </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Seleccionar </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="d-flex justify-content-center align-items-center">
+                   <input type="checkbox" class="checkbox-large me-2"
+                     [checked]="isProductoSeleccionado(row)" 
+                     (change)="toggleProductoSeleccionado(row, $event)"> 
+                   <input *ngIf="isProductoSeleccionado(row)" 
+                          type="number" 
+                          class="form-control form-control-sm "
+                          style="width: 50px; margin-left: 10px;"
+                          [value]="getCantidadProducto(row)" 
+                          (input)="actualizarCantidad(row, +$event.target.value)"
+                          placeholder="Cant.">
+                </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="6">No hay productos que coincidan con "{{input.value}}"</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="alert alert-warning mb-3" role="alert" *ngIf="!esPadre">
+  <b>Advertencia:</b> Recuerde que del producto que va a cortar debe descontar las cantidades indicándolas como número negativo.
+</div>

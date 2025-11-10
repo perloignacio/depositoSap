@@ -9,6 +9,8 @@ import { AuthGuard } from './helpers/auth.guard';
 import { NavesComponent } from './components/naves/naves.component';
 import { ImprimirComponent } from './components/imprimir/imprimir.component';
 import { BalanzaComponent } from './components/balanza/balanza.component';
+import { ZkitComponent } from './components/zkit/zkit.component';
+import { ZkitArmadoComponent } from './components/zkit-armado/zkit-armado.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: 'naves', component: NavesComponent,canActivate: [AuthGuard] },
   { path: 'viajes', component: ViajesComponent ,canActivate: [AuthGuard] },
   { path: 'balanza', component: BalanzaComponent ,canActivate: [AuthGuard] },
+  { path: 'zkit', component: ZkitComponent, canActivate: [AuthGuard] },
+  { path: 'zkitArmado/:id', component: ZkitArmadoComponent, canActivate: [AuthGuard] },
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
 ];

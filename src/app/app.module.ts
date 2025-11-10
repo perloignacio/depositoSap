@@ -15,6 +15,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NotasVentaComponent } from './components/notas-venta/notas-venta.component';
 import { TopComponent } from './components/shared/top/top.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
@@ -26,6 +27,8 @@ import { ImprimirComponent } from './components/imprimir/imprimir.component';
 import { BalanzaComponent } from './components/balanza/balanza.component'
 import {MatDialogModule} from "@angular/material/dialog";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ZkitComponent } from './components/zkit/zkit.component';
+import { ZkitArmadoComponent } from './components/zkit-armado/zkit-armado.component';
 @NgModule({
   imports: [
     FormsModule,
@@ -37,6 +40,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
     MatDialogModule,
     SweetAlert2Module
 
@@ -54,7 +58,9 @@ declarations: [
     NavesComponent,
     LoadingComponent,
     ImprimirComponent,
-    BalanzaComponent
+    BalanzaComponent,
+    ZkitComponent,
+    ZkitArmadoComponent,
 
 ],
 providers: [
