@@ -39,6 +39,7 @@ export class DetalleNotaVentaComponent implements OnInit {
   peso:number=0;
   esadmin:boolean=false;
   dataSource: MatTableDataSource<NotaVentaDetalle>;
+  observaciones:string[] = [];
   displayedColumns: string[] = ['Imprimir','Codigo', 'Descripcion', 'Umedida', 'Pendiente','Cantidad','CantidadCtrl','Faltante','Existencia','Acciones'];
   constructor(private svcNotas:NotasvtasService,private route: ActivatedRoute,svcBalanza:BalanzaService,private svcShared:SharedService,private router:Router,public svcImpimir:ImprimirService,private svcAutenticate:AuthenticationService) {
 
@@ -68,11 +69,17 @@ export class DetalleNotaVentaComponent implements OnInit {
 
   }
 
+  
   inicio(){
     this.svcNotas.getOne(this.id).subscribe(nota => {
       this.nota=nota;
+      this.observaciones.push(this.nota.observ);
       this.svcNotas.detalle(this.id,this.nave.codigo,this.objViajes.numero).pipe(first()).subscribe(notavtaDetalle => {
         this.notas=notavtaDetalle;
+        this.notas.forEach((nd)=>{
+        if(!this.observaciones.includes(nd.obs))
+          this.observaciones.push(nd.obs);
+        })
         this.dataSource = new MatTableDataSource(notavtaDetalle);
         this.cargandoPagina=false;
       });
@@ -88,6 +95,7 @@ export class DetalleNotaVentaComponent implements OnInit {
         row.cantprep=lectura.Valor;
         this.peso=lectura.Valor;
         this.clase="text-success";
+        row.setCantCtrol();
        }else{
         this.peso=lectura.Valor;
         row.cantprep=0;
@@ -186,8 +194,9 @@ export class DetalleNotaVentaComponent implements OnInit {
         prepa.viaje=nvd.viaje;
         prepa.descripcion=this.objViajes.descripcion;
         prepa.cantControl=nvd.cantControl;
-        
-          preparaciones.push(prepa)
+        prepa.existencia = nvd.existencia;
+        prepa.descripcionProducto =nvd.materialObj.descripcion;
+        preparaciones.push(prepa)
       }
       
       
@@ -266,7 +275,7 @@ export class DetalleNotaVentaComponent implements OnInit {
     //console.log(eti);
     this.svcImpimir.imprimir(eti).pipe(first()).subscribe(lbl => {
       if(lbl=='Error'){
-        alert("Error al imprimir etiqueta");
+        alert("Error al imprimir etiqueta. Recuerde que debe guardar la preparacion antes de imprimir");
       }else{
         alert("Imprimiendo");
       }

@@ -10,4 +10,6 @@ export class Preparacion{
     pos :number;
     cantControl:number;
     reparto:number;
+    existencia:number;
+    descripcionProducto:string;
 }

@@ -59,7 +59,7 @@
               <p class=""><span class="font-weight-bold">Cliente:</span> {{ this.nota?.nombre_solic}}</p>
               <p class=""><span class="font-weight-bold">Dirección:</span> {{ this.nota?.calle}}</p>
               <p class=""><span class="font-weight-bold">Entrega:</span> {{ this.nota?.calle}}</p>
-              <p class=""><span class="font-weight-bold text-danger">Observaciones:</span> <span class="text-danger">{{ this.nota?.observ}}</span></p>
+              <p class=""><span class="font-weight-bold text-danger">Observaciones:</span> <span class="text-danger" *ngFor = "let obs of this.observaciones">{{ this.obs }}</span></p>
             </div>
           </div>
         </div>
