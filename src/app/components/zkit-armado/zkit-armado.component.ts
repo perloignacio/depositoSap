@@ -20,10 +20,11 @@ interface ProductoConCantidad {
 export class ZkitArmadoComponent implements AfterViewInit {
   productosFamilia: Zkit[] = [];
   dataSource = new MatTableDataSource<Zkit>([]);
-  displayedColumns: string[] = ['codigo', 'descripcion', 'kg', 'medida', 'tipo', 'acciones'];
+  displayedColumns: string[] = [];
   esPadre = false;
-  productosSeleccionados: Zkit[] = [];
-  productosConCantidad: ProductoConCantidad[] = [];
+
+  altas: { [codigo: string]: number } = {};
+  bajas: { [codigo: string]: number } = {};
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +38,9 @@ export class ZkitArmadoComponent implements AfterViewInit {
           this.dataSource.data = productos;
           if (productos.length > 0 && productos[0].soloPadre === 'SI') {
             this.esPadre = true;
+            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'altas'];
+          } else {
+            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'altas', 'bajas'];
           }
         },
         error: (err) => {
@@ -56,98 +60,104 @@ export class ZkitArmadoComponent implements AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  toggleProductoSeleccionado(producto: Zkit, event: any) {
-    const isChecked = event.target.checked;
+  getCantidadAlta(row: Zkit): number {
+    return this.altas[row.codigo] || 0;
+  }
 
-    if (isChecked) {
-      const existe = this.productosSeleccionados.find(p => p.codigo === producto.codigo);
-      if (!existe) {
-        this.productosSeleccionados.push(producto);
-        this.productosConCantidad.push({
-          producto: producto,
-          cantidad: 0
-        });
+  getCantidadBaja(row: Zkit): number {
+    const valor = this.bajas[row.codigo] || 0;
+    return Math.abs(valor);
+  }
+
+  actualizarCantidadAlta(row: Zkit, cantidad: number) {
+    this.altas[row.codigo] = cantidad;
+  }
+
+  actualizarCantidadBaja(row: Zkit, cantidad: number) {
+    this.bajas[row.codigo] = cantidad > 0 ? -cantidad : cantidad;
+  }
+
+  getSubtotalAltas(): number {
+    let suma = 0;
+    for (const codigo in this.altas) {
+      const producto = this.productosFamilia.find(p => p.codigo === codigo);
+      if (producto && this.altas[codigo] > 0) {
+        suma += this.altas[codigo] * producto.kg;
       }
-    } else {
-      this.productosSeleccionados = this.productosSeleccionados.filter(p => p.codigo !== producto.codigo);
-      this.productosConCantidad = this.productosConCantidad.filter(pc => pc.producto.codigo !== producto.codigo);
     }
+    return suma;
   }
 
-  isProductoSeleccionado(producto: Zkit): boolean {
-    return this.productosSeleccionados.some(p => p.codigo === producto.codigo);
-  }
-
-  getCantidadProducto(producto: Zkit): number {
-    const item = this.productosConCantidad.find(pc => pc.producto.codigo === producto.codigo);
-    return item ? item.cantidad : 1;
-  }
-
-  actualizarCantidad(producto: Zkit, nuevaCantidad: number) {
-    const item = this.productosConCantidad.find(pc => pc.producto.codigo === producto.codigo);
-    if (item) {
-      item.cantidad = nuevaCantidad;
+  getSubtotalBajas(): number {
+    let suma = 0;
+    for (const codigo in this.bajas) {
+      const producto = this.productosFamilia.find(p => p.codigo === codigo);
+      if (producto && this.bajas[codigo] < 0) {
+        suma += this.bajas[codigo] * producto.kg;
+      }
     }
+    return suma;
+  }
+
+  getCantidadProductosSeleccionados(): number {
+    const altasCount = Object.values(this.altas).filter(v => v > 0).length;
+    const bajasCount = Object.values(this.bajas).filter(v => v < 0).length;
+    return altasCount + bajasCount;
   }
 
   armarKit() {
-  if (this.productosSeleccionados.length === 0) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'No hay productos seleccionados',
-      text: 'Por favor, seleccione al menos un producto para armar el kit.'
-    });
-    return;
-  }
+    const body: any[] = [];
 
-  const body = this.productosConCantidad.map(pc => ({
-    idProducto: pc.producto.idProducto,
-    cantidad: pc.cantidad
-  }));
-
-  // Validación: cantidad no puede ser cero, vacía o NaN
-  const cantidadInvalida = body.some(item =>
-    item.cantidad === 0 ||
-    item.cantidad === null ||
-    item.cantidad === undefined ||
-    isNaN(item.cantidad)
-  );
-
-  if (cantidadInvalida) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Cantidad inválida',
-      text: 'Por favor, ingrese una cantidad válida (distinta de cero) para todos los productos seleccionados.'
-    });
-    return;
-  }
-
-  this.zkitService.generarMovimientoZkit(body).subscribe({
-    next: (res) => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Movimiento generado con éxito',
-        showConfirmButton: true,
-        timer: 2000
-      });
-      this.productosSeleccionados = [];
-      this.productosConCantidad = [];
-      this.dataSource.data = this.productosFamilia;
-    },
-    error: (err) => {
-      console.error(err);
-      const msg =
-        err?.error?.Message ||
-        err?.error?.message ||
-        err?.Message ||
-        err?.message ||
-        JSON.stringify(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al generar el movimiento',
-        text: msg
-      });
+    for (const codigo in this.altas) {
+      if (this.altas[codigo] > 0) {
+        const producto = this.productosFamilia.find(p => p.codigo === codigo);
+        if (producto) {
+          body.push({
+            idProducto: producto.idProducto,
+            cantidad: this.altas[codigo]
+          });
+        }
+      }
     }
-  });
-}
+
+    for (const codigo in this.bajas) {
+      if (this.bajas[codigo] < 0) {
+        const producto = this.productosFamilia.find(p => p.codigo === codigo);
+        if (producto) {
+          body.push({
+            idProducto: producto.idProducto,
+            cantidad: this.bajas[codigo]
+          });
+        }
+      }
+    }
+
+    this.zkitService.generarMovimientoZkit(body).subscribe({
+      next: (res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Movimiento generado con éxito',
+          showConfirmButton: true,
+          timer: 2000
+        });
+        this.altas = {};
+        this.bajas = {};
+        this.dataSource.data = this.productosFamilia;
+      },
+      error: (err) => {
+        console.error(err);
+        const msg =
+          err?.error?.Message ||
+          err?.error?.message ||
+          err?.Message ||
+          err?.message ||
+          JSON.stringify(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al generar el movimiento',
+          text: msg
+        });
+      }
+    });
+  }
 }
