@@ -98,7 +98,14 @@ export class ZkitArmadoComponent implements AfterViewInit {
     }
     return suma;
   }
+  estaBalanceado() {
+  return Math.round((this.getSubtotalAltas() + this.getSubtotalBajas()) * 100) / 100 === 0;
+}
 
+getDiferencia(): number {
+  const diff = Math.round((this.getSubtotalAltas() + this.getSubtotalBajas()) * 100) / 100;
+  return diff === 0 ? 0 : diff;
+}
   getCantidadProductosSeleccionados(): number {
     const altasCount = Object.values(this.altas).filter(v => v > 0).length;
     const bajasCount = Object.values(this.bajas).filter(v => v < 0).length;

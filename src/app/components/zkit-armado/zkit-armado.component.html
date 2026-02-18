@@ -17,11 +17,11 @@
               <b>Total Bajas:</b> {{ getSubtotalBajas().toFixed(2) }}
             </div>
             <div class="m-1">
-              <b>Diferencia:</b> {{ (getSubtotalAltas() + getSubtotalBajas()).toFixed(2) }}
+              <b>Diferencia:</b> {{ getDiferencia().toFixed(2) }}
             </div>
           </div>
           <button type="button" class="btn btn-primary ms-4" (click)="armarKit()"
-            [disabled]="(((getSubtotalAltas() + getSubtotalBajas()).toFixed(2) ) !== '0.00' && esPadre === false )|| getCantidadProductosSeleccionados() === 0">
+            [disabled]="(!estaBalanceado() && esPadre === false) || getCantidadProductosSeleccionados() === 0">
             Armar Kit ({{ getCantidadProductosSeleccionados()}})
           </button>
         </div>
