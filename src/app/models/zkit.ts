@@ -7,4 +7,5 @@ export class Zkit {
     tipo: string;
     soloPadre: string;
     idProducto: number;
+    existencias:any[];
 }

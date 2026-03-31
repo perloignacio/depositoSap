@@ -1,4 +1,7 @@
-<div class="container">
+<div *ngIf="cargandoPagina" class="center-object" style="width: 15rem; height: 15rem">
+  <app-loading></app-loading>
+</div>
+<div class="container" *ngIf="!cargandoPagina">
   <div class="row">
     <div class="col-md-12">
       <div class="row">
@@ -49,6 +52,12 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Medida </th>
             <td mat-cell *matCellDef="let row"> {{row.medida}} </td>
           </ng-container>
+
+          <ng-container matColumnDef="existencias">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Existencias </th>
+            <td mat-cell *matCellDef="let row"> {{getExistencias(row)}} </td>
+          </ng-container>
+
 
           <!-- Altas Column -->
           <ng-container matColumnDef="altas">

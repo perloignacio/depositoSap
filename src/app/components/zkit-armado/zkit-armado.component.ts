@@ -22,7 +22,7 @@ export class ZkitArmadoComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Zkit>([]);
   displayedColumns: string[] = [];
   esPadre = false;
-
+  cargandoPagina=false;
   altas: { [codigo: string]: number } = {};
   bajas: { [codigo: string]: number } = {};
 
@@ -32,16 +32,19 @@ export class ZkitArmadoComponent implements AfterViewInit {
   constructor(private route: ActivatedRoute, private zkitService: ZkitService) {
     const familiaId = this.route.snapshot.paramMap.get('id');
     if (familiaId) {
+      this.cargandoPagina = true;
       this.zkitService.getProductosByFamilias(familiaId).subscribe({
         next: (productos: Zkit[]) => {
+          this.cargandoPagina = false;
           this.productosFamilia = productos;
           this.dataSource.data = productos;
           if (productos.length > 0 && productos[0].soloPadre === 'SI') {
             this.esPadre = true;
-            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'altas'];
+            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'existencias', 'altas'];
           } else {
-            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'altas', 'bajas'];
+            this.displayedColumns = ['codigo', 'descripcion', 'medida', 'existencias',  'altas', 'bajas'];
           }
+          
         },
         error: (err) => {
           console.error(err);
@@ -55,6 +58,13 @@ export class ZkitArmadoComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  getExistencias(row:Zkit){
+    let acu:number = 0;
+    row?.existencias.forEach((exis)=>{
+      acu+=exis.existencia;
+    })
+    return acu;
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -114,7 +124,7 @@ getDiferencia(): number {
 
   armarKit() {
     const body: any[] = [];
-
+    this.cargandoPagina = true;
     for (const codigo in this.altas) {
       if (this.altas[codigo] > 0) {
         const producto = this.productosFamilia.find(p => p.codigo === codigo);
@@ -140,7 +150,9 @@ getDiferencia(): number {
     }
 
     this.zkitService.generarMovimientoZkit(body).subscribe({
+      
       next: (res) => {
+        this.cargandoPagina = true;
         Swal.fire({
           icon: 'success',
           title: 'Movimiento generado con éxito',
