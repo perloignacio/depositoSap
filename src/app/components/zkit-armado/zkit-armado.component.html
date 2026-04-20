@@ -74,7 +74,7 @@
             <td mat-cell *matCellDef="let row">
               <input type="number" class="form-control form-control-lg" style="width: 80px;"
                 [value]="getCantidadBaja(row) ? -getCantidadBaja(row) : '0'"
-                (input)="actualizarCantidadBaja(row, +$event.target.value)" min="0">
+                (input)="actualizarCantidadBaja(row, +$event.target.value)" [disabled]="!verificaSipuedeEditar(row)" min="0">
             </td>
           </ng-container>
 

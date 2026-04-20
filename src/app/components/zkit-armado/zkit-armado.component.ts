@@ -58,6 +58,13 @@ export class ZkitArmadoComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  verificaSipuedeEditar(row:Zkit){
+    let acu:number = 0;
+    row?.existencias.forEach((exis)=>{
+      acu+=exis.existencia;
+    })
+    return acu > 0;
+  }
   getExistencias(row:Zkit){
     let acu:number = 0;
     row?.existencias.forEach((exis)=>{
