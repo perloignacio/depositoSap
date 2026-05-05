@@ -7,5 +7,6 @@ import { NotaVentaDetalle } from '@app/models/notavta-detalle';
 export class SharedService {
   NotaVentaDetalle:NotaVentaDetalle[]=[];
   cssLogin:string="";
+  objModal:any;
   constructor() { }
 }

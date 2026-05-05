@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 import { Preparacion } from '@app/models/preparacion';
+import { parciales } from '@app/models/parciales';
 @Injectable({
   providedIn: 'root'
 })
@@ -43,5 +44,17 @@ export class NotasvtasService {
 
   limpiar(preparaciones:Preparacion) {
     return this.http.post<string>(this.endpoint+'limpiar',preparaciones);
+  }
+
+  nuevoParcial(parcial:parciales) {
+    return this.http.post<boolean>(this.endpoint+'parcial',parcial);
+  }
+
+   borraParcial(id:string) {
+    return this.http.post<boolean>(this.endpoint+'borraParcial/'+id,null);
+  }
+
+  obtenerParciales(viaje:string, nota:string) {
+    return this.http.post<parciales[]>(this.endpoint+`obtenerParciales/${viaje}/${nota}`,null);
   }
 }

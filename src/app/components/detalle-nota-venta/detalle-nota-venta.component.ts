@@ -17,6 +17,8 @@ import { NotasvtasService } from '@app/services/notasvtas.service';
 import { SharedService } from '@app/services/shared.service';
 import { first } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { ParcialesComponent } from '../parciales/parciales.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-detalle-nota-venta',
@@ -37,11 +39,11 @@ export class DetalleNotaVentaComponent implements OnInit {
   notas:NotaVentaDetalle[]=[];
   clase:string="";
   peso:number=0;
-  esadmin:boolean=false;
+  esadmin:boolean=false;  
   dataSource: MatTableDataSource<NotaVentaDetalle>;
   observaciones:string[] = [];
   displayedColumns: string[] = ['Imprimir','Codigo', 'Descripcion', 'Umedida', 'Pendiente','Cantidad','CantidadCtrl','Faltante','Existencia','Acciones'];
-  constructor(private svcNotas:NotasvtasService,private route: ActivatedRoute,svcBalanza:BalanzaService,private svcShared:SharedService,private router:Router,public svcImpimir:ImprimirService,private svcAutenticate:AuthenticationService) {
+  constructor(private svcNotas:NotasvtasService,private route: ActivatedRoute,svcBalanza:BalanzaService,private svcShared:SharedService,private router:Router,public svcImpimir:ImprimirService,private svcAutenticate:AuthenticationService, private dialog: MatDialog) {
 
     this.route.queryParams.subscribe(params => {
       this.svcNotas.faltantes().pipe(first()).subscribe(lista=>{
@@ -90,26 +92,39 @@ export class DetalleNotaVentaComponent implements OnInit {
 
   tomarpesada(row:NotaVentaDetalle){
     this.bs.lectura(this.balanza.Id).pipe(first()).subscribe(lectura => {
-    if(lectura){
-      if(lectura.Status=="E"){
-        row.cantprep=lectura.Valor;
-        this.peso=lectura.Valor;
-        this.clase="text-success";
-        row.setCantCtrol();
-       }else{
-        this.peso=lectura.Valor;
-        row.cantprep=0;
-        this.clase="text-danger";
-        this.tomarpesada(row);
-       }
-    }else{
-      alert("Ocurrio un error al tomar lectura");
-    }
-
-
-
-
+      if(lectura){
+        if(lectura.Status=="E"){
+          row.cantprep=lectura.Valor;
+          this.peso=lectura.Valor;
+          this.clase="text-success";
+          row.setCantCtrol();
+        }else{
+          this.peso=lectura.Valor;
+          row.cantprep=0;
+          this.clase="text-danger";
+          this.tomarpesada(row);
+        }
+      }else{
+        alert("Ocurrio un error al tomar lectura");
+      }
     });
+  }
+
+  parcial(row:NotaVentaDetalle){
+    this.svcShared.objModal = { nota: row, balanza: this.balanza.Id, viaje: this.objViajes.numero };
+    let dialogRef = this.dialog.open(ParcialesComponent, {
+      height: '400px',
+      width: '600px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        row.cantprep=result.valor;
+        row.setCantCtrol();
+      }
+    });
+    
   }
   guardar(){
     

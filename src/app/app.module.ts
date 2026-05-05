@@ -29,6 +29,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ZkitComponent } from './components/zkit/zkit.component';
 import { ZkitArmadoComponent } from './components/zkit-armado/zkit-armado.component';
+import { ParcialesComponent } from './components/parciales/parciales.component';
 @NgModule({
   imports: [
     FormsModule,
@@ -61,6 +62,7 @@ declarations: [
     BalanzaComponent,
     ZkitComponent,
     ZkitArmadoComponent,
+    ParcialesComponent,
 
 ],
 providers: [
