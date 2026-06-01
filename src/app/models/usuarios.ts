@@ -5,4 +5,5 @@ export class Usuarios {
   Usuario: string;
   Token?: string;
   RolDeposito:string;
+  Zkit: boolean;
 }

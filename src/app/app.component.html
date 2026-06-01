@@ -135,7 +135,7 @@
                             Calculadora
                         </a>
                       </li>
-                      <li>
+                      <li *ngIf = "this.authenticationService.currentUserValue.Zkit">
                         <a [routerLink]="'zkit'" class="">
                           <i class="metismenu-icon pe-7s-tools"></i>
                             Zkit

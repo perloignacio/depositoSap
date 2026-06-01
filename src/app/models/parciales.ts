@@ -4,4 +4,6 @@ export class parciales{
     peso: number;
     nota: string;
     viaje: string;
+    nombre:string;
+    apellido:string;
 }

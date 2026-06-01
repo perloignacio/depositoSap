@@ -8,5 +8,6 @@ export class Etiqueta{
   viaje:Viajes;
   nota:notavta;
   nave:Naves;
+  parcial:Boolean;
   productos:NotaVentaDetalle[]=[];  
 }

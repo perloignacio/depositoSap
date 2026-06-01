@@ -111,10 +111,10 @@ export class DetalleNotaVentaComponent implements OnInit {
   }
 
   parcial(row:NotaVentaDetalle){
-    this.svcShared.objModal = { nota: row, balanza: this.balanza.Id, viaje: this.objViajes.numero };
+    this.svcShared.objModal = { notaDetalle: row, balanza: this.balanza, viaje: this.objViajes, nave: this.nave, nota:this.nota };
     let dialogRef = this.dialog.open(ParcialesComponent, {
-      height: '400px',
-      width: '600px',
+      height: '700px',
+      width: '900px',
       disableClose: true,
     });
 
@@ -282,6 +282,7 @@ export class DetalleNotaVentaComponent implements OnInit {
     eti.nota=this.nota;
     eti.viaje=this.objViajes;
     eti.productos=[];
+    eti.parcial = false;
     this.notas.forEach(element => {
       if (element.imprimir){
         eti.productos.push(element);
